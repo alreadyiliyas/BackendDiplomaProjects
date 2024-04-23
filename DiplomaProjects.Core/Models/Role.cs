@@ -8,8 +8,8 @@
 			Id = id;
 			Name = name;
 		}
-		public int Id { get; set; }
-		public string Name { get; set; } = string.Empty;
+		public int Id { get; }
+		public string Name { get; } = string.Empty;
 
 		public static (Role Role, string Error) Create(int id, string name)
 		{

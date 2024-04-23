@@ -34,13 +34,13 @@ namespace DiplomaProjects.Application.Services
 			var hashPassword = _passwordHasher.Generate(password);
 
 			var userRoleId = await _rolessRepository.GetByRoleName(userRoleName.ToLower());
-			var (user, error) = User.Create(1, Guid.NewGuid(), userName, email, hashPassword, userRoleId);
+			var (user, error) = User.Create(1, Guid.NewGuid(), email, hashPassword, userRoleId);
 
 			if (!string.IsNullOrEmpty(error))
 			{
 				throw new Exception(error);
 			}
-			await _usersRepository.Add(user.GuidUserId, user.UserName, user.Email, user.PasswordHash, user.UserRoleId);
+			await _usersRepository.Add(user.GuidUserId, user.Email, user.PasswordHash, user.UserRoleId);
 		}
 		public async Task<AuthResultDTO> Login(string email, string password)
 		{

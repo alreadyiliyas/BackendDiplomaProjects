@@ -2,6 +2,7 @@
 using DiplomaProjects.Core.Abstractions.RepositoryAbstractions;
 using DiplomaProjects.Core.Models;
 using DiplomaProjects.DataAccess.Entities;
+using DiplomaProjects.DataAccess.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace DiplomaProjects.DataAccess.Repositories
@@ -17,12 +18,11 @@ namespace DiplomaProjects.DataAccess.Repositories
 			_mapper = mapper;
 		}
 
-		public async Task Add(Guid guidUserId, string userName, string email, string password, int userRoleId)
+		public async Task Add(Guid guidUserId, string email, string password, int userRoleId)
 		{
 			var userEntity = new UserEntity
 			{
 				GuidUserId = Guid.NewGuid(),
-				UserName = userName,
 				Email = email,
 				PasswordHash = password,
 				UserRoleId = userRoleId,
