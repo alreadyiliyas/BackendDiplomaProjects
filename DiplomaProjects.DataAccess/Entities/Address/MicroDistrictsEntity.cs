@@ -4,7 +4,7 @@
 	{
 		public int Id { get; set; }
 		public string? MicroDistrictsName { get; set; }
-		public int DistrictId { get; set; }
+		public int DistrictsId { get; set; }
 		public DistrictsEntity? Districts { get; set; }
 	}
 }

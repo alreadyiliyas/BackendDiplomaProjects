@@ -10,8 +10,6 @@ namespace DiplomaProjects.DataAccess.Configuration.AddressConfiguration
 		{
 			builder.HasKey(x => x.Id);
 			builder.Property(x=>x.StreetsName).IsRequired();
-
-			builder.HasOne(x => x.MicroDistricts).WithMany().HasForeignKey(x => x.MicroDistrictId).IsRequired();
 		}
 	}
 }

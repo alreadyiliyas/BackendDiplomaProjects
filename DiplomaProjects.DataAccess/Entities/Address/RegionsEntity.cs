@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string? RegionsName { get; set; }
-        public int CountryId { get; set; }
+        public int CountriesId { get; set; }
         public CountriesEntity? Countries { get; set; }
     }
 }

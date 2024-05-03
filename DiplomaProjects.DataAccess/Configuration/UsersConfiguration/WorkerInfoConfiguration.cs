@@ -9,7 +9,12 @@ namespace DiplomaProjects.DataAccess.Configuration.UsersConfiguration
 		public void Configure(EntityTypeBuilder<WorkerInfoEntity> builder)
 		{
 			builder.HasKey(x => x.Id);
-
+			
+			builder.HasOne(u => u.User)
+				.WithMany()
+				.HasForeignKey(u => u.UserId)
+				.IsRequired();
+			
 			builder.HasMany(wi => wi.Specialties)
 				   .WithOne()
 				   .HasForeignKey(ws => ws.WorkerId);

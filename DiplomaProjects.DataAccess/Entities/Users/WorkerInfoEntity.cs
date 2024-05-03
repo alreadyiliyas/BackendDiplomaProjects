@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public int UserId { get; set; }
+        public UserEntity? User { get; set; }
 		public ICollection<WorkerSpecialtyEntity> Specialties { get; set; }
 	}
 }

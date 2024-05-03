@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using DiplomaProjects.Core.Models;
+using DiplomaProjects.DataAccess.Repositories.AddressRepositories;
+using DiplomaProjects.Application.Services.AddressService;
+using DiplomaProjects.Core.Models.AddressModels;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -59,6 +62,9 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IRolesRepository, RolesRepository>();
 builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddScoped(typeof(IAddressRepositories<>), typeof(AddressRepositories<>));
+
+builder.Services.AddScoped<IAddressServices, AddressService>();
 
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();

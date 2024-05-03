@@ -13,7 +13,7 @@ namespace DiplomaProjects.DataAccess.Configuration.AddressConfiguration
 
 			builder.HasOne(x => x.Countries)
 				.WithMany()
-				.HasForeignKey(x => x.CountryId)
+				.HasForeignKey(x => x.CountriesId)
 				.IsRequired();
 		}
 	}

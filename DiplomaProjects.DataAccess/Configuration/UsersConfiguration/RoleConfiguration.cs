@@ -9,6 +9,7 @@ namespace DiplomaProjects.DataAccess.Configuration.UsersConfiguration
         public void Configure(EntityTypeBuilder<RoleEntity> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Name).IsRequired();
         }
     }
 }

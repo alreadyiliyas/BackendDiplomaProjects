@@ -11,7 +11,7 @@ namespace DiplomaProjects.DataAccess.Configuration.AddressConfiguration
 			builder.HasKey(x => x.Id);
 			builder.Property(x=>x.DistrictsName).IsRequired();
 
-			builder.HasOne(x=>x.Cities).WithMany().HasForeignKey(x => x.CityId).IsRequired();
+			builder.HasOne(x=>x.Cities).WithMany().HasForeignKey(x => x.CitiesId).IsRequired();
 		}
 	}
 }
