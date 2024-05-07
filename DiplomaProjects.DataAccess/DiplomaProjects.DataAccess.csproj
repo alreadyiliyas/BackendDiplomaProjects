@@ -21,4 +21,8 @@
     <ProjectReference Include="..\DiplomaProjects.Core\DiplomaProjects.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repositories\AddressRepositories\" />
+  </ItemGroup>
+
 </Project>

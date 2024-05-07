@@ -14,9 +14,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using DiplomaProjects.Core.Models;
-using DiplomaProjects.DataAccess.Repositories.AddressRepositories;
 using DiplomaProjects.Application.Services.AddressService;
 using DiplomaProjects.Core.Models.AddressModels;
+using DiplomaProjects.DataAccess.Entities.Address;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -62,10 +62,10 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IRolesRepository, RolesRepository>();
 builder.Services.AddScoped<IUsersService, UsersService>();
-builder.Services.AddScoped(typeof(IAddressRepositories<>), typeof(AddressRepositories<>));
 
 builder.Services.AddScoped<IAddressServices, AddressService>();
-
+builder.Services.AddScoped<IRepositories<CountriesEntity>, Repositories<CountriesEntity>>();
+builder.Services.AddScoped<IRepositories<RegionsEntity>, Repositories<RegionsEntity>>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
@@ -87,18 +87,23 @@ app.UseHttpsRedirection();
 
 app.MapUsersEndpoints();
 
-app.UseAuthentication();
-app.UseAuthorization();
+//app.UseAuthentication();
+//app.UseAuthorization();
 
 
 
-app.MapControllers();
+//app.MapControllers();
 
 app.UseCors(x =>
 {
-	x.WithHeaders().AllowAnyHeader();
-	x.WithOrigins("http://localhost:3000");
-	x.WithMethods().AllowAnyMethod();
+	x.AllowAnyHeader();
+	x.AllowAnyOrigin();
+	x.AllowAnyMethod();
 });
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();

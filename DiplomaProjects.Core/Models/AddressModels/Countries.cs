@@ -2,14 +2,16 @@
 {
 	public class Countries
 	{
+		public int Id { get; set; }
+		public string CountriesName { get; set; }
+		public Countries()
+		{
+		}
 		private Countries(int id, string countriesName)
 		{
 			Id = id;
 			CountriesName = countriesName;
 		}
-
-		public int Id { get; set; }
-		public string CountriesName { get; set; }
 
 		public static (Countries countries, string error) Create(int id, string countriesName)
 		{

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using DiplomaProjects.Core.Models;
+using DiplomaProjects.Core.Models.AddressModels;
+using DiplomaProjects.DataAccess.Entities.Address;
 using DiplomaProjects.DataAccess.Entities.Users;
 
 namespace DiplomaProjects.DataAccess.MapProfiles
@@ -10,6 +12,8 @@ namespace DiplomaProjects.DataAccess.MapProfiles
 		{
 			CreateMap<UserEntity, User>().ReverseMap();
 			CreateMap<RoleEntity, Role>().ReverseMap();
+			CreateMap<CountriesEntity, Countries>().ReverseMap();
+			CreateMap<RegionsEntity, Regions>().ReverseMap();	
 		}
 	}
 }

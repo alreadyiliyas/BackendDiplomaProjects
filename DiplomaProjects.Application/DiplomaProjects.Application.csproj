@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DiplomaProjects.Core\DiplomaProjects.Core.csproj" />
+    <ProjectReference Include="..\DiplomaProjects.DataAccess\DiplomaProjects.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,32 +1,46 @@
-﻿using DiplomaProjects.Core.Abstractions.RepositoryAbstractions;
+﻿using AutoMapper;
+using DiplomaProjects.Core.Abstractions.RepositoryAbstractions;
 using DiplomaProjects.Core.Models.AddressModels;
+using DiplomaProjects.DataAccess.Entities.Address;
 
 namespace DiplomaProjects.Application.Services.AddressService
 {
 	public class AddressService : IAddressServices
 	{
-		private readonly IAddressRepositories<Countries> _countriesRepository;
-		private readonly IAddressRepositories<Regions> _regionsRepository;
+		private readonly IRepositories<CountriesEntity> _countriesRepository;
+		private readonly IRepositories<RegionsEntity> _regionsRepository;
+		private readonly IMapper _mapper;
 
-		public AddressService(IAddressRepositories<Countries> countriesRepository, IAddressRepositories<Regions> regionsRepository)
+		public AddressService(
+			IRepositories<CountriesEntity> countriesRepository, 
+			IRepositories<RegionsEntity> regionsRepository,
+			IMapper mapper)
 		{
 			_countriesRepository = countriesRepository;
 			_regionsRepository = regionsRepository;
+			_mapper = mapper;
+		}
+
+		public async Task<int> AddCountry(Countries country)
+		{
+			var countryEntity = _mapper.Map<CountriesEntity>(country);
+			if (_countriesRepository.Add(countryEntity))
+				return countryEntity.Id;
+			else
+				return -1;
 		}
 
 		public async Task<List<Countries>> GetAllCountries()
 		{
-			return await _countriesRepository.GetAll();
+			var countryEntities = _countriesRepository.GetAll();
+			return _mapper.Map<List<Countries>>(countryEntities);
 		}
 
-		public async Task<int> AddCountry(Countries countries)
+		public async Task<List<Regions>> GetAllRegionsByIdCountry(int countryId)
 		{
-			return await _countriesRepository.Create(countries);
-		}
+			var regionsEntity = _countriesRepository.GetById(countryId);
+			return _mapper.Map<List<Regions>>(regionsEntity);
 
-		public async Task<List<Regions>> GetAllRegionsByIdCountry(int id)
-		{
-			return await _regionsRepository.GetById(id);
 		}
 	}
 }

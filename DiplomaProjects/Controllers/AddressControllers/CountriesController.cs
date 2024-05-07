@@ -1,6 +1,5 @@
 ﻿using DiplomaProjects.Application.Services.AddressService;
 using DiplomaProjects.Contracts.Address.Request;
-using DiplomaProjects.Contracts.Address.Response;
 using DiplomaProjects.Core.Models.AddressModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,33 +10,41 @@ namespace DiplomaProjects.Controllers.AddressEnpoints
 	[Route("api/[controller]")]
 	public class CountriesController : ControllerBase
 	{
-		private readonly IAddressServices _addressServices;
+		private readonly IAddressServices _addressService;
 
-		public CountriesController(IAddressServices addressServices)
+		public CountriesController(IAddressServices addressService)
 		{
-			_addressServices = addressServices;
+			_addressService = addressService;
 		}
 		[HttpGet("countries")]
-		public async Task<ActionResult<AddressResponse>> GetCountries()
+		public async Task<IActionResult> GetAllCountries()
 		{
-			var countries = await _addressServices.GetAllCountries();
-
-			var response = countries.Select(c => new AddressResponse(c.Id, c.CountriesName));
-
-			return Ok(response);
+			var countries = await _addressService.GetAllCountries();
+			return Ok(countries); // Возвращаем список стран
 		}
 		[HttpPost("countries")]
-		public async Task<ActionResult<int>> AddCountry([FromBody] CountriesRequest request)
+		public async Task<IActionResult> AddCountry([FromBody] CountriesRequest countryRequest)
 		{
-			var (country, error) = Countries.Create(0, request.CountryName);
-			
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			var (country, error) = Countries.Create(0, countryRequest.CountryName); // ID необходимо указать, но можно заменить на 0 или другое значение по умолчанию
 			if (!string.IsNullOrEmpty(error))
 			{
 				return BadRequest(error);
 			}
-			var countryId = await _addressServices.AddCountry(country);
 
-			return Ok(countryId);
+			var result = await _addressService.AddCountry(country);
+			if (result != -1)
+			{
+				return Ok(result); // Возвращаем ID добавленной страны
+			}
+			else
+			{
+				return BadRequest("Failed to add country");
+			}
 		}
 		//update
 		//delete

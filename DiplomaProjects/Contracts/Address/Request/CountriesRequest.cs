@@ -2,7 +2,8 @@
 
 namespace DiplomaProjects.Contracts.Address.Request
 {
-    public record CountriesRequest(
-        string CountryName
-        );
+	public record CountriesRequest(
+		[Required] string CountryName
+	);
 }
+    
