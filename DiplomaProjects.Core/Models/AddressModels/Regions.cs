@@ -2,7 +2,7 @@
 {
 	public class Regions
 	{
-		private Regions(int id, string regionsName)
+		public Regions(int id, string regionsName)
 		{
 			Id = id;
 			RegionsName = regionsName;

@@ -1,5 +1,6 @@
 ﻿using DiplomaProjects.Core.Abstractions.RepositoryAbstractions;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace DiplomaProjects.DataAccess.Repositories
 {
@@ -47,11 +48,6 @@ namespace DiplomaProjects.DataAccess.Repositories
 			return _entity.ToList();
 		}
 
-		public T GetById(int id)
-		{
-			return _entity.Find(id);
-		}
-
 		public bool Update(T model)
 		{
 			try
@@ -64,6 +60,48 @@ namespace DiplomaProjects.DataAccess.Repositories
 			{
 				return false;
 			}
+		}
+		public T GetById(int id)
+		{
+			return _entity.Find(id);
+		}
+		public async Task<List<TReturn>> GetQueryDataAsync<TReturn>(
+											Expression<Func<T, bool>> whereExp,
+											Expression<Func<T, TReturn>> selectExp,
+											Expression<Func<T, TReturn>> orderExp = null,
+											bool? descending = null,
+											params Expression<Func<T, object>>[] includeExps)
+		{
+			IQueryable<T> query = _diplomaDbContext.Set<T>();
+
+			if (whereExp != null)
+			{
+				query = query.Where(whereExp);
+			}
+
+			if (orderExp != null)
+			{
+				if (descending.HasValue)
+				{
+					query = descending.Value ? query.OrderByDescending(orderExp) : query.OrderBy(orderExp);
+				}
+				else
+				{
+					query = query.OrderBy(orderExp);
+				}
+			}
+
+			foreach (Expression<Func<T, object>> navigationProperty in includeExps)
+			{
+				query = query.Include(navigationProperty);
+			}
+
+			return await query.Select(selectExp).ToListAsync();
+		}
+
+		public IEnumerable<T> GetAllRegionsByCountryId(int countryId)
+		{
+			return _entity.Where(r => EF.Property<int>(r, "CountriesId") == countryId).ToList();
 		}
 	}
 }

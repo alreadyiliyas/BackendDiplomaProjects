@@ -15,7 +15,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using DiplomaProjects.Core.Models;
 using DiplomaProjects.Application.Services.AddressService;
-using DiplomaProjects.Core.Models.AddressModels;
 using DiplomaProjects.DataAccess.Entities.Address;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -87,12 +86,6 @@ app.UseHttpsRedirection();
 
 app.MapUsersEndpoints();
 
-//app.UseAuthentication();
-//app.UseAuthorization();
-
-
-
-//app.MapControllers();
 
 app.UseCors(x =>
 {

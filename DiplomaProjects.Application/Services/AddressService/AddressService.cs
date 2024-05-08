@@ -2,6 +2,7 @@
 using DiplomaProjects.Core.Abstractions.RepositoryAbstractions;
 using DiplomaProjects.Core.Models.AddressModels;
 using DiplomaProjects.DataAccess.Entities.Address;
+using System.Linq.Expressions;
 
 namespace DiplomaProjects.Application.Services.AddressService
 {
@@ -38,9 +39,11 @@ namespace DiplomaProjects.Application.Services.AddressService
 
 		public async Task<List<Regions>> GetAllRegionsByIdCountry(int countryId)
 		{
-			var regionsEntity = _countriesRepository.GetById(countryId);
-			return _mapper.Map<List<Regions>>(regionsEntity);
+			Expression<Func<RegionsEntity, bool>> whereExp = r => r.CountriesId == countryId;
+			Expression<Func<RegionsEntity, Regions>> selectExp = r => new Regions(r.Id, r.RegionsName);
 
+			var regionsEntity = await _regionsRepository.GetQueryDataAsync(whereExp, selectExp);
+			return _mapper.Map<List<Regions>>(regionsEntity);
 		}
 	}
 }

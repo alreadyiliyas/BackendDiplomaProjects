@@ -13,7 +13,7 @@ namespace DiplomaProjects.DataAccess.MapProfiles
 			CreateMap<UserEntity, User>().ReverseMap();
 			CreateMap<RoleEntity, Role>().ReverseMap();
 			CreateMap<CountriesEntity, Countries>().ReverseMap();
-			CreateMap<RegionsEntity, Regions>().ReverseMap();	
+			CreateMap<RegionsEntity, Regions>().ReverseMap();
 		}
 	}
 }
