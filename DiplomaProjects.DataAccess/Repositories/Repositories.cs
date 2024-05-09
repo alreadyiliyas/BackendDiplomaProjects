@@ -98,10 +98,5 @@ namespace DiplomaProjects.DataAccess.Repositories
 
 			return await query.Select(selectExp).ToListAsync();
 		}
-
-		public IEnumerable<T> GetAllRegionsByCountryId(int countryId)
-		{
-			return _entity.Where(r => EF.Property<int>(r, "CountriesId") == countryId).ToList();
-		}
 	}
 }

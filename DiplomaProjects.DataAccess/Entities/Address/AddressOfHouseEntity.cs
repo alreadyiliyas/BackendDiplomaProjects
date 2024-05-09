@@ -7,7 +7,7 @@
         public string? ApartmentNumber { get; set; }
         public int StreetsId { get; set; }
         public StreetsEntity? Streets { get; set; }
-		public int? MicroDistrictsId { get; set; } 
+		public int? MicroDistrictsId { get; set; }  
 		public MicroDistrictsEntity? MicroDistricts { get; set; }
 	}
 }

@@ -9,11 +9,10 @@ namespace DiplomaProjects.Core.Abstractions.RepositoryAbstractions
         T GetById(int id);
         IEnumerable<T> GetAll();
         bool Delete(T model);
-		IEnumerable<T> GetAllRegionsByCountryId(int countryId);
 		Task<List<TReturn>> GetQueryDataAsync<TReturn>(Expression<Func<T, bool>> whereExp,
-																Expression<Func<T, TReturn>> selectExp,
-																Expression<Func<T, TReturn>> orderExp = null,
-																bool? descending = null,
-																params Expression<Func<T, object>>[] includeExps);
+													   Expression<Func<T, TReturn>> selectExp,
+													   Expression<Func<T, TReturn>> orderExp = null,
+													   bool? descending = null,
+													   params Expression<Func<T, object>>[] includeExps);
 	}
 }

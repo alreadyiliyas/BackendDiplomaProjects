@@ -65,6 +65,13 @@ builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IAddressServices, AddressService>();
 builder.Services.AddScoped<IRepositories<CountriesEntity>, Repositories<CountriesEntity>>();
 builder.Services.AddScoped<IRepositories<RegionsEntity>, Repositories<RegionsEntity>>();
+builder.Services.AddScoped<IRepositories<CitiesEntity>, Repositories<CitiesEntity>>();
+builder.Services.AddScoped<IRepositories<DistrictsEntity>, Repositories<DistrictsEntity>>();
+builder.Services.AddScoped<IRepositories<MicroDistrictsEntity>, Repositories<MicroDistrictsEntity>>();
+builder.Services.AddScoped<IRepositories<StreetDistrictsEntity>, Repositories<StreetDistrictsEntity>>();
+builder.Services.AddScoped<IRepositories<StreetsEntity>, Repositories<StreetsEntity>>();
+builder.Services.AddScoped<IRepositories<AddressOfHouseEntity>, Repositories<AddressOfHouseEntity>>();
+
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
@@ -85,7 +92,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapUsersEndpoints();
-
 
 app.UseCors(x =>
 {

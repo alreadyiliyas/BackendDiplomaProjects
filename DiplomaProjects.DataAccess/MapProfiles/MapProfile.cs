@@ -14,6 +14,12 @@ namespace DiplomaProjects.DataAccess.MapProfiles
 			CreateMap<RoleEntity, Role>().ReverseMap();
 			CreateMap<CountriesEntity, Countries>().ReverseMap();
 			CreateMap<RegionsEntity, Regions>().ReverseMap();
+			CreateMap<CitiesEntity, Cities>().ReverseMap();
+			CreateMap<DistrictsEntity, Districts>().ReverseMap();
+			CreateMap<MicroDistrictsEntity, MicroDistricts>().ReverseMap();
+			CreateMap<StreetsEntity, Streets>().ReverseMap();
+			CreateMap<StreetDistrictsEntity, StreetsDistricts>().ReverseMap();
+			CreateMap<AddressOfHouseEntity, AddressOfHouses>().ReverseMap();
 		}
 	}
 }
