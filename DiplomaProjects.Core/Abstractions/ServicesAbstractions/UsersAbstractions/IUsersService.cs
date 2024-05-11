@@ -1,6 +1,6 @@
 ﻿using DiplomaProjects.Core.DTOs;
 
-namespace DiplomaProjects.Core.Abstractions.ServicesAbstractions
+namespace DiplomaProjects.Core.Abstractions.ServicesAbstractions.UsersAbstractions
 {
     public interface IUsersService
     {

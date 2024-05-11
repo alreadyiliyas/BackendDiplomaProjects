@@ -1,4 +1,3 @@
-using DiplomaProjects.Application.Services;
 using DiplomaProjects.Core.Abstractions.RepositoryAbstractions;
 using DiplomaProjects.DataAccess;
 using DiplomaProjects.DataAccess.MapProfiles;
@@ -6,7 +5,6 @@ using DiplomaProjects.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using DiplomaProjects.Endpoints;
-using DiplomaProjects.Core.Abstractions.ServicesAbstractions;
 using DiplomaProjects.Infrastructure.Authentication;
 using DiplomaProjects.Application.Auth;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +14,9 @@ using System.Text;
 using DiplomaProjects.Core.Models;
 using DiplomaProjects.Application.Services.AddressService;
 using DiplomaProjects.DataAccess.Entities.Address;
+using DiplomaProjects.Application.Services.UsersService;
+using DiplomaProjects.Core.Abstractions.ServicesAbstractions.UsersAbstractions;
+using DiplomaProjects.DataAccess.Entities.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -71,6 +72,11 @@ builder.Services.AddScoped<IRepositories<MicroDistrictsEntity>, Repositories<Mic
 builder.Services.AddScoped<IRepositories<StreetDistrictsEntity>, Repositories<StreetDistrictsEntity>>();
 builder.Services.AddScoped<IRepositories<StreetsEntity>, Repositories<StreetsEntity>>();
 builder.Services.AddScoped<IRepositories<AddressOfHouseEntity>, Repositories<AddressOfHouseEntity>>();
+
+builder.Services.AddScoped<IUsersInfoServices, UserInfoService>();
+builder.Services.AddScoped<IRepositories<UserInfoEntity>, Repositories<UserInfoEntity>>();
+
+
 
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();

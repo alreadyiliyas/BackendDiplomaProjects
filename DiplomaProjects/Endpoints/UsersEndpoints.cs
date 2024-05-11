@@ -1,6 +1,6 @@
 ﻿using DiplomaProjects.Contracts;
 using DiplomaProjects.Contracts.Users;
-using DiplomaProjects.Core.Abstractions.ServicesAbstractions;
+using DiplomaProjects.Core.Abstractions.ServicesAbstractions.UsersAbstractions;
 
 namespace DiplomaProjects.Endpoints
 {
@@ -14,7 +14,7 @@ namespace DiplomaProjects.Endpoints
 				try
 				{
 					await usersService.Register(request.UserName, request.Email, request.Password, request.UserRoleName);
-					return Results.Ok(new Response("Success", "User created"));
+					return Results.Ok(new Response("Успешно", "Пользователь создан"));
 				}
 				catch (Exception ex)
 				{

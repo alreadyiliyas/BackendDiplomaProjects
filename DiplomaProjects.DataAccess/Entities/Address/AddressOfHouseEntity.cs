@@ -1,9 +1,13 @@
-﻿namespace DiplomaProjects.DataAccess.Entities.Address
+﻿using DiplomaProjects.DataAccess.Entities.Users;
+
+namespace DiplomaProjects.DataAccess.Entities.Address
 {
     public class AddressOfHouseEntity
     {
         public int Id { get; set; }
-        public string? HouseNumber { get; set; }
+		public int UserId { get; set; } // Внешний ключ к UserInfoEntity
+		public UserInfoEntity? User { get; set; }
+		public string? HouseNumber { get; set; }
         public string? ApartmentNumber { get; set; }
         public int StreetsId { get; set; }
         public StreetsEntity? Streets { get; set; }

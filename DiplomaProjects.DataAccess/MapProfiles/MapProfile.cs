@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DiplomaProjects.Core.Models;
 using DiplomaProjects.Core.Models.AddressModels;
+using DiplomaProjects.Core.Models.UsersModels;
 using DiplomaProjects.DataAccess.Entities.Address;
 using DiplomaProjects.DataAccess.Entities.Users;
 
@@ -20,6 +21,7 @@ namespace DiplomaProjects.DataAccess.MapProfiles
 			CreateMap<StreetsEntity, Streets>().ReverseMap();
 			CreateMap<StreetDistrictsEntity, StreetsDistricts>().ReverseMap();
 			CreateMap<AddressOfHouseEntity, AddressOfHouses>().ReverseMap();
+			CreateMap<UserInfoEntity, UserInfo>().ReverseMap();
 		}
 	}
 }

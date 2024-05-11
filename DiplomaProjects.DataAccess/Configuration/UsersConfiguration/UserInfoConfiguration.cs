@@ -19,12 +19,6 @@ namespace DiplomaProjects.DataAccess.Configuration.UsersConfiguration
 				.OnDelete(DeleteBehavior.Cascade)
 				.IsRequired();
 
-			builder.HasOne(x => x.AddressOfHouse)
-				.WithMany()
-				.HasForeignKey(x => x.AddressId)
-				.OnDelete(DeleteBehavior.Cascade)
-				.IsRequired();
-
 		}
 	}
 }

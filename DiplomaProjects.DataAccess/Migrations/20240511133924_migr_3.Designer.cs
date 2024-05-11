@@ -3,6 +3,7 @@ using System;
 using DiplomaProjects.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiplomaProjects.DataAccess.Migrations
 {
     [DbContext(typeof(DiplomaDbContext))]
-    partial class DiplomaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240511133924_migr_3")]
+    partial class migr_3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -213,6 +215,9 @@ namespace DiplomaProjects.DataAccess.Migrations
                     b.Property<int?>("ModeratorId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("StatusId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("StatusesId")
                         .HasColumnType("integer");
 
@@ -305,6 +310,9 @@ namespace DiplomaProjects.DataAccess.Migrations
 
                     b.Property<DateTime>("RefreshTokenExpiryTime")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("UserRoleId")
                         .HasColumnType("integer");

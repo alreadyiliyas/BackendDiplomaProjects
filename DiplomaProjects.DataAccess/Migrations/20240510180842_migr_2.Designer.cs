@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiplomaProjects.DataAccess.Migrations
 {
     [DbContext(typeof(DiplomaDbContext))]
-    [Migration("20240429160403_migr_1")]
-    partial class migr_1
+    [Migration("20240510180842_migr_2")]
+    partial class migr_2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,11 +44,16 @@ namespace DiplomaProjects.DataAccess.Migrations
                     b.Property<int>("StreetsId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("MicroDistrictsId");
 
                     b.HasIndex("StreetsId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("AddressOfHouses");
                 });
@@ -324,12 +329,6 @@ namespace DiplomaProjects.DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddressId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("AddressOfHouseId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -355,8 +354,6 @@ namespace DiplomaProjects.DataAccess.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AddressOfHouseId");
 
                     b.HasIndex("UserId");
 
@@ -408,9 +405,17 @@ namespace DiplomaProjects.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DiplomaProjects.DataAccess.Entities.Users.UserInfoEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("MicroDistricts");
 
                     b.Navigation("Streets");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DiplomaProjects.DataAccess.Entities.Address.CitiesEntity", b =>
@@ -520,15 +525,9 @@ namespace DiplomaProjects.DataAccess.Migrations
 
             modelBuilder.Entity("DiplomaProjects.DataAccess.Entities.Users.UserInfoEntity", b =>
                 {
-                    b.HasOne("DiplomaProjects.DataAccess.Entities.Address.AddressOfHouseEntity", "AddressOfHouse")
-                        .WithMany()
-                        .HasForeignKey("AddressOfHouseId");
-
                     b.HasOne("DiplomaProjects.DataAccess.Entities.Users.UserEntity", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-
-                    b.Navigation("AddressOfHouse");
 
                     b.Navigation("User");
                 });

@@ -19,7 +19,7 @@ namespace DiplomaProjects.Controllers.AddressControllers
 		{
 			if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
-			var (addressOfHouse, error) = AddressOfHouses.Create(0, addressOfHousesRequest.HouseNumber, addressOfHousesRequest.ApartmentNumber, addressOfHousesRequest.StreetsId, addressOfHousesRequest.MicroDistrictsId);
+			var (addressOfHouse, error) = AddressOfHouses.Create(0, addressOfHousesRequest.UserId, addressOfHousesRequest.HouseNumber, addressOfHousesRequest.ApartmentNumber, addressOfHousesRequest.StreetsId, addressOfHousesRequest.MicroDistrictsId);
 			if (!string.IsNullOrEmpty(error))
 			{
 				return BadRequest(error);

@@ -7,7 +7,7 @@ namespace DiplomaProjects.DataAccess.Entities.Application
         public int Id { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
-        public int StatusId { get; set; }
+        public int StatusesId { get; set; }
         public StatusesEntity Statuses { get; set; } = new StatusesEntity();
         public int ClientId { get; set; }
 		public int? ModeratorId { get; set; }
