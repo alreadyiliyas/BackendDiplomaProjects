@@ -13,6 +13,7 @@ namespace DiplomaProjects.Infrastructure.Authentication
 	public class JwtProvider : IJwtProvider
 	{
 		private readonly JwtOptions _options;
+		
 		public JwtProvider(IOptions<JwtOptions> options)
 		{
 			_options = options.Value;
@@ -23,7 +24,7 @@ namespace DiplomaProjects.Infrastructure.Authentication
 			{
 				new Claim(ClaimTypes.Name, user.Email.ToString()),
 				new Claim(CustomClaims.UserGuid, user.GuidUserId.ToString()),
-				new Claim(CustomClaims.UserRole, user.UserRoleId.ToString()),
+				new Claim(CustomClaims.UserRole, user.UserRoleName.ToString()),
 			};
 
 			var signingCredentials = new SigningCredentials(

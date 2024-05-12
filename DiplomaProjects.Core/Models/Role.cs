@@ -17,7 +17,7 @@
 
 			if (string.IsNullOrEmpty(name) || name.Length > MAX_ROLENAME_LENGTH)
 			{
-				error = "Role name can't be empty or longer then 20 symbols";
+				error = "Роль не может быть длиннее, чем 20 символов";
 			} 
 
 			var role = new Role(id, name);

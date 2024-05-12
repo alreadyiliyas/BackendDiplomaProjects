@@ -21,9 +21,11 @@ namespace DiplomaProjects.Core.Models
 		public new string? Email { get; } = string.Empty;
 		public new string? PasswordHash { get; } = string.Empty;
 		public int UserRoleId { get; }
+		public virtual Role UserRole { get; }
+		public string? UserRoleName { get; set; }
 		public string? RefreshToken { get; set; }
 		public DateTime RefreshTokenExpiryTime { get; set; }
-		
+		private User() { }
 		public static (User User, string Error) Create(int id, Guid guidUserId, string email, string passwordHash, int userRoleId)
 		{
 			var error = string.Empty;

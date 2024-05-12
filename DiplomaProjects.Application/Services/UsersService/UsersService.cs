@@ -53,7 +53,7 @@ namespace DiplomaProjects.Application.Services.UsersService
                 throw new Exception("Failed to login");
             }
 
-            var accessToken = _jwtProvider.GenerateToken(user);
+			var accessToken = _jwtProvider.GenerateToken(user);
             var refreshToken = _jwtProvider.GenerateRefreshToken();
             var expiration = DateTime.Now.AddDays(7);
             user.RefreshToken = refreshToken;

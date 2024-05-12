@@ -33,11 +33,28 @@ namespace DiplomaProjects.DataAccess.Repositories
 		public async Task<User> GetByEmail(string email)
 		{
 			var userEntity = await _context.Users
-						.AsNoTracking()
-						.FirstOrDefaultAsync(x => x.Email == email);
+								.Include(u => u.UserRole)
+								.AsNoTracking()
+								.FirstOrDefaultAsync(x => x.Email == email);
 
-			return _mapper.Map<User>(userEntity);
+			// Если пользователь найден, асинхронно получаем роль
+			if (userEntity != null)
+			{
+				// Получаем связанную роль
+				var userRole = await _context.Roles.FirstOrDefaultAsync(ur => ur.Id == userEntity.UserRoleId);
+				if (userRole != null)
+				{
+					var role = await _context.Roles.FirstOrDefaultAsync(r => r.Id == userRole.Id);
+					userEntity.UserRole = userRole;
+					userEntity.UserRole.Name = role.Name;
+				}
+			}
+
+			var user = _mapper.Map<User>(userEntity);
+
+			return user;
 		}
+
 		public async Task AddRefreshToken(int id, string refreshToken, DateTime refreshTokenExpiryTime)
 		{
 			var user = await _context.Users.FindAsync(id);

@@ -2,7 +2,7 @@
 {
 	internal class CustomClaims
 	{
-		internal const string UserGuid = "userGuid";
+		internal const string UserGuid = "UserGuid";
 		internal const string UserRole = "UserRole";
 	}
 }
