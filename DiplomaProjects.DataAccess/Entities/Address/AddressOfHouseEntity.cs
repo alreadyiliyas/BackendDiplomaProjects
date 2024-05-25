@@ -6,7 +6,7 @@ namespace DiplomaProjects.DataAccess.Entities.Address
     {
         public int Id { get; set; }
 		public int UserId { get; set; } // Внешний ключ к UserInfoEntity
-		public UserInfoEntity? User { get; set; }
+		public UserEntity User { get; set; }
 		public string? HouseNumber { get; set; }
         public string? ApartmentNumber { get; set; }
         public int StreetsId { get; set; }

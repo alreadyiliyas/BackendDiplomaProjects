@@ -17,6 +17,9 @@ using DiplomaProjects.DataAccess.Entities.Address;
 using DiplomaProjects.Application.Services.UsersService;
 using DiplomaProjects.Core.Abstractions.ServicesAbstractions.UsersAbstractions;
 using DiplomaProjects.DataAccess.Entities.Users;
+using DiplomaProjects.DataAccess.Entities.Application;
+using DiplomaProjects.Core.Abstractions.ServicesAbstractions.ApplicationsAbstractions;
+using DiplomaProjects.Application.Services.ApplicationsService;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -34,6 +37,7 @@ builder.Services.AddDbContext<DiplomaDbContext>(
 		options.UseNpgsql(builder.Configuration.GetConnectionString(nameof(DiplomaDbContext)),
 		x => x.MigrationsAssembly("DiplomaProjects.DataAccess"));
 	});
+
 
 builder.Services.AddIdentityCore<User>()
 	.AddEntityFrameworkStores<DiplomaDbContext>()
@@ -63,6 +67,11 @@ builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IRolesRepository, RolesRepository>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 
+
+builder.Services.AddScoped<IRepositories<ApplicationsEntity>, Repositories<ApplicationsEntity>>();
+builder.Services.AddScoped<IApplicationsServices, ApplicationsServices>();
+
+
 builder.Services.AddScoped<IAddressServices, AddressService>();
 builder.Services.AddScoped<IRepositories<CountriesEntity>, Repositories<CountriesEntity>>();
 builder.Services.AddScoped<IRepositories<RegionsEntity>, Repositories<RegionsEntity>>();
@@ -72,6 +81,7 @@ builder.Services.AddScoped<IRepositories<MicroDistrictsEntity>, Repositories<Mic
 builder.Services.AddScoped<IRepositories<StreetDistrictsEntity>, Repositories<StreetDistrictsEntity>>();
 builder.Services.AddScoped<IRepositories<StreetsEntity>, Repositories<StreetsEntity>>();
 builder.Services.AddScoped<IRepositories<AddressOfHouseEntity>, Repositories<AddressOfHouseEntity>>();
+
 
 builder.Services.AddScoped<IUsersInfoServices, UserInfoService>();
 builder.Services.AddScoped<IRepositories<UserInfoEntity>, Repositories<UserInfoEntity>>();
@@ -97,15 +107,17 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapUsersEndpoints();
+
 
 app.UseCors(x =>
 {
 	x.AllowAnyHeader();
-	x.AllowAnyOrigin();
+	x.WithOrigins("http://localhost:3000");
 	x.AllowAnyMethod();
 });
 
+app.MapUsersEndpoints();
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 

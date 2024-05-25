@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DiplomaProjects.DataAccess.Migrations
 {
-    public partial class migr_2 : Migration
+    public partial class migr_1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -147,13 +147,12 @@ namespace DiplomaProjects.DataAccess.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    StatusId = table.Column<int>(type: "integer", nullable: false),
                     StatusesId = table.Column<int>(type: "integer", nullable: false),
                     ClientId = table.Column<int>(type: "integer", nullable: false),
                     ModeratorId = table.Column<int>(type: "integer", nullable: true),
                     EmployeeId = table.Column<int>(type: "integer", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    LastModifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    LastModifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -188,7 +187,7 @@ namespace DiplomaProjects.DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<int>(type: "integer", nullable: true),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
                     Surname = table.Column<string>(type: "text", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: true),
                     BirthDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -204,7 +203,8 @@ namespace DiplomaProjects.DataAccess.Migrations
                         name: "FK_UserInfo_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -341,9 +341,9 @@ namespace DiplomaProjects.DataAccess.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AddressOfHouses_UserInfo_UserId",
+                        name: "FK_AddressOfHouses_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "UserInfo",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -441,13 +441,13 @@ namespace DiplomaProjects.DataAccess.Migrations
                 name: "StreetDistricts");
 
             migrationBuilder.DropTable(
+                name: "UserInfo");
+
+            migrationBuilder.DropTable(
                 name: "WorkerSpecialtyEntities");
 
             migrationBuilder.DropTable(
                 name: "MicroDistricts");
-
-            migrationBuilder.DropTable(
-                name: "UserInfo");
 
             migrationBuilder.DropTable(
                 name: "Statuses");

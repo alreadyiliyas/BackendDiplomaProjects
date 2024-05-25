@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DiplomaProjects.Controllers.AddressControllers
 {
 	[ApiController]
-	[Route("api/[controller]")]
+	[Route("api/")]
 	public class AddressOfHousesController : ControllerBase
 	{
 		private readonly IAddressServices _addressServices;
@@ -14,7 +14,7 @@ namespace DiplomaProjects.Controllers.AddressControllers
 		{
 			_addressServices = addressServices;
 		}
-		[HttpPost]
+		[HttpPost("addressOfHouses")]
 		public async Task<IActionResult> AddNewAddressOfHouses([FromBody] AddressOfHousesRequest addressOfHousesRequest)
 		{
 			if (!ModelState.IsValid) { return BadRequest(ModelState); }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DiplomaProjects.Controllers.AddressControllers
 {
 	[ApiController]
-	[Route("api/[controller]")]
+	[Route("api/")]
 	public class MicroDistrictsController : ControllerBase
 	{
 		private readonly IAddressServices _addressServices;
@@ -12,7 +12,7 @@ namespace DiplomaProjects.Controllers.AddressControllers
 		{
 			_addressServices = addressServices;
 		}
-		[HttpGet("{districtId}")]
+		[HttpGet("microDistrict/{districtId}")]
 		public async Task<IActionResult> GetAllMicroDistrictsByIdDistrict(int districtId)
 		{
 			var microDistricts = await _addressServices.GetAllMicroDistrictsByIdDistrict(districtId);

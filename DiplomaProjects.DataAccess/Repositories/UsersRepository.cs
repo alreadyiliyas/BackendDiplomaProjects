@@ -18,17 +18,19 @@ namespace DiplomaProjects.DataAccess.Repositories
 			_mapper = mapper;
 		}
 
-		public async Task Add(Guid guidUserId, string email, string password, int userRoleId)
+		public async Task<int> Add(Guid guidUserId, string email, string password, int userRoleId)
 		{
 			var userEntity = new UserEntity
 			{
-				GuidUserId = Guid.NewGuid(),
+				GuidUserId = guidUserId,
 				Email = email,
 				PasswordHash = password,
 				UserRoleId = userRoleId,
 			};
 			await _context.Users.AddAsync(userEntity);
 			await _context.SaveChangesAsync();
+
+			return userEntity.Id;
 		}
 		public async Task<User> GetByEmail(string email)
 		{
@@ -62,6 +64,15 @@ namespace DiplomaProjects.DataAccess.Repositories
 			user.RefreshTokenExpiryTime = refreshTokenExpiryTime.ToUniversalTime();
 
 			await _context.SaveChangesAsync();
+		}
+
+		public async Task<int> GetByGuid(string userGuid)
+		{
+			var userEntity = await _context.Users
+									.AsNoTracking()
+									.FirstOrDefaultAsync(x => x.GuidUserId.ToString() == userGuid);
+			var user = _mapper.Map<User>(userEntity);
+			return user.Id;
 		}
 	}
 }

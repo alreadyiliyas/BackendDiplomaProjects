@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DiplomaProjects.Controllers.AddressControllers
 {
 	[ApiController]
-	[Route("api/[controller]")]
+	[Route("api/")]
 	public class DistrictsController : ControllerBase
 	{
 		private readonly IAddressServices _addressServices;
@@ -14,7 +14,7 @@ namespace DiplomaProjects.Controllers.AddressControllers
 			_addressServices = addressServices;
 		}
 
-		[HttpGet("{cityId}")]
+		[HttpGet("district/{cityId}")]
 		public async Task<IActionResult> GetAllDistrictsByIdCity(int cityId)
 		{
 			var districts = await _addressServices.GetAllDistrictsByIdCity(cityId);

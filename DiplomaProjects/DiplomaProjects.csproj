@@ -33,4 +33,9 @@
     <ProjectReference Include="..\DiplomaProjects.Infrastructure\DiplomaProjects.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Contracts\Applications\Response\" />
+    <Folder Include="images\" />
+  </ItemGroup>
+
 </Project>

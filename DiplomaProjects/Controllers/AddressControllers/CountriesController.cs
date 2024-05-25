@@ -7,7 +7,7 @@ namespace DiplomaProjects.Controllers.AddressEnpoints
 {
     //[Authorize]
     [ApiController]
-	[Route("api/[controller]")]
+	[Route("api/")]
 	public class CountriesController : ControllerBase
 	{
 		private readonly IAddressServices _addressService;

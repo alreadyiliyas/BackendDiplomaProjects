@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DiplomaProjects.Controllers.AddressControllers
 {
 	[ApiController]
-	[Route("api/[controller]")]
+	[Route("api/")]
 	public class RegionsController : ControllerBase
 	{
 		private readonly IAddressServices _addressServices;
@@ -12,7 +12,7 @@ namespace DiplomaProjects.Controllers.AddressControllers
 		{
 			_addressServices = addressServices;
 		}
-		[HttpGet("{countryId}")]
+		[HttpGet("region/{countryId}")]
 
 		public async Task<IActionResult> GetAllRegionsByIdCountry(int countryId)
 		{

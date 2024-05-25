@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiplomaProjects.DataAccess.Migrations
 {
     [DbContext(typeof(DiplomaDbContext))]
-    [Migration("20240511172341_migr_4")]
-    partial class migr_4
+    [Migration("20240519135719_migr_1")]
+    partial class migr_1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -209,7 +209,7 @@ namespace DiplomaProjects.DataAccess.Migrations
                     b.Property<int?>("EmployeeId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime?>("LastModifiedAt")
+                    b.Property<DateTime>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int?>("ModeratorId")
@@ -402,7 +402,7 @@ namespace DiplomaProjects.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DiplomaProjects.DataAccess.Entities.Users.UserInfoEntity", "User")
+                    b.HasOne("DiplomaProjects.DataAccess.Entities.Users.UserEntity", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

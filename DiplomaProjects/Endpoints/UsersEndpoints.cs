@@ -13,8 +13,12 @@ namespace DiplomaProjects.Endpoints
 			{
 				try
 				{
-					await usersService.Register(request.UserName, request.Email, request.Password, request.UserRoleName);
-					return Results.Ok(new Response("Успешно", "Пользователь создан"));
+					var userId = await usersService.Register(request.UserName, request.Email, request.Password, request.UserRoleName);
+					return Results.Ok(new
+					{
+						UserId = userId,
+						message = "Пользователь успешно создан!"
+					});
 				}
 				catch (Exception ex)
 				{

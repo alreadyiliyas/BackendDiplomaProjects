@@ -35,7 +35,7 @@ namespace DiplomaProjects.Core.Models.UsersModels
 			}
 
 			DateTime birthDate;
-			if (!DateTime.TryParseExact(birthDateString, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthDate))
+			if (!DateTime.TryParseExact(birthDateString, "yyyy-mm-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthDate))
 			{
 				error = "Неверный формат даты рождения.";
 			}

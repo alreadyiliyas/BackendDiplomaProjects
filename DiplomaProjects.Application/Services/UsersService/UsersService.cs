@@ -24,23 +24,25 @@ namespace DiplomaProjects.Application.Services.UsersService
             _passwordHasher = passwordHasher;
             _jwtProvider = jwtProvider;
         }
-        public async Task Register(string userName, string email, string password, string userRoleName)
+        public async Task<int> Register(string userName, string email, string password, string userRoleName)
         {
             var userExists = await _usersRepository.GetByEmail(email);
             if (userExists != null)
             {
-                throw new Exception("User already exists!");
+                throw new Exception("Пользователь уже существует!");
             }
             var hashPassword = _passwordHasher.Generate(password);
 
             var userRoleId = await _rolessRepository.GetByRoleName(userRoleName.ToLower());
-            var (user, error) = User.Create(1, Guid.NewGuid(), email, hashPassword, userRoleId);
+			var (user, error) = User.Create(email, hashPassword, userRoleId, userRoleName);
 
-            if (!string.IsNullOrEmpty(error))
+			if (!string.IsNullOrEmpty(error))
             {
                 throw new Exception(error);
             }
-            await _usersRepository.Add(user.GuidUserId, user.Email, user.PasswordHash, user.UserRoleId);
+            var userId = await _usersRepository.Add(user.GuidUserId, user.Email, user.PasswordHash, user.UserRoleId);
+
+            return userId;
         }
         public async Task<AuthResultDTO> Login(string email, string password)
         {
@@ -105,5 +107,13 @@ namespace DiplomaProjects.Application.Services.UsersService
                 RefreshToken = newRefreshToken
             };
         }
-    }
+
+		public async Task<int> GetByGuid(string guid)
+		{
+            int userId = await _usersRepository.GetByGuid(guid);
+
+            return userId;
+
+		}
+	}
 }

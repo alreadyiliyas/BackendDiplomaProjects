@@ -2,31 +2,19 @@
 
 namespace DiplomaProjects.Core.Models
 {
-	public class User : IdentityUser
+	public class User : IdentityUser<int>
 	{
 		public const int MAX_USERNAME_LENGTH = 30;
 		public const int MIN_USERNAME_LENGTH = 4;
-		
-		private User(int id, Guid guidUserId, string email, string passwordHash, int userRoleId)
-		{
-			Id = id;
-			GuidUserId = guidUserId;
-			Email = email;
-			PasswordHash = passwordHash;
-			UserRoleId = userRoleId;
-		}
-		public new int Id { get; }
-		public Guid GuidUserId { get; }
-		public new string? UserName { get; } = string.Empty;
-		public new string? Email { get; } = string.Empty;
-		public new string? PasswordHash { get; } = string.Empty;
-		public int UserRoleId { get; }
-		public virtual Role UserRole { get; }
-		public string? UserRoleName { get; set; }
+
+		public Guid GuidUserId { get; private set; }
+		public int UserRoleId { get; private set; }
+		public virtual Role UserRole { get; private set; }
+		public string? UserRoleName { get; private set; }
 		public string? RefreshToken { get; set; }
 		public DateTime RefreshTokenExpiryTime { get; set; }
 		private User() { }
-		public static (User User, string Error) Create(int id, Guid guidUserId, string email, string passwordHash, int userRoleId)
+		public static (User User, string Error) Create(string email, string passwordHash, int userRoleId, string userRoleName)
 		{
 			var error = string.Empty;
 
@@ -40,9 +28,18 @@ namespace DiplomaProjects.Core.Models
 				{
 					error += "\n";
 				}
-				error += "Password can't be empty";
+				error += "Пароль не может быть пустым";
 			}
-			var user = new User(id, guidUserId, email, passwordHash, userRoleId);
+
+			var user = new User
+			{
+				GuidUserId = Guid.NewGuid(),
+				Email = email,
+				PasswordHash = passwordHash,
+				UserRoleId = userRoleId,
+				UserRoleName = userRoleName
+			};
+
 			return (user, error);
 		}
 	}
