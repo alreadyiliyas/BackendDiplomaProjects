@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using DiplomaProjects.Core.Abstractions.RepositoryAbstractions;
 using DiplomaProjects.Core.Abstractions.ServicesAbstractions.ApplicationsAbstractions;
-using DiplomaProjects.Core.Models.AddressModels;
-using DiplomaProjects.Core.Models.ApplicationsModels;
-using DiplomaProjects.DataAccess.Entities.Application;
 
 
 namespace DiplomaProjects.Application.Services.ApplicationsService
@@ -21,12 +18,23 @@ namespace DiplomaProjects.Application.Services.ApplicationsService
 		}
 		public async Task<List<Applications>> GetAllApplications()
 		{
-			var countryEntities = await _applicationRepoUniq.GetAllApplications();
-			return _mapper.Map<List<Applications>>(countryEntities);
+			var applicationsEntities = await _applicationRepoUniq.GetAllApplications();
+			return _mapper.Map<List<Applications>>(applicationsEntities);
+		}
+		public async Task<List<Applications>> GetPersonalApplication(int userId, int roleId)
+		{
+			var applicationsEntities = await _applicationRepoUniq.GetApplicationsByUserId(userId, roleId);
+			return _mapper.Map<List<Applications>>(applicationsEntities);
 		}
 		public async Task<int> CreateApplication(Applications applications)
 		{
 			var applicationEntity = await _applicationRepoUniq.CreateApplication(applications);
+
+			return applicationEntity;
+		}
+		public async Task<int> TakeJob(int ApplicationId, int StatusesId, int ClientId, int EmployeeId)
+		{
+			var applicationEntity = await _applicationRepoUniq.UpdateApplication(ApplicationId, StatusesId, ClientId, EmployeeId);
 
 			return applicationEntity;
 		}

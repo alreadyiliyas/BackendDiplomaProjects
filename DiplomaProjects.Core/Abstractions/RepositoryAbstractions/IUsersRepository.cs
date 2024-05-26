@@ -7,6 +7,6 @@ namespace DiplomaProjects.Core.Abstractions.RepositoryAbstractions
 		Task<int> Add(Guid guidUserId, string email, string password, int userRoleId);
 		Task<User> GetByEmail(string email);
 		Task AddRefreshToken(int id, string refreshToken, DateTime refreshTokenExpiryTime);
-		Task<int> GetByGuid(string userGuid);
+		Task<int> GetByGuid(Guid userGuid);
 	}
 }

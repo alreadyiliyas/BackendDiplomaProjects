@@ -1,5 +1,6 @@
 ﻿using DiplomaProjects.Application.Services.ApplicationsService;
 using DiplomaProjects.Contracts.Applications.Request;
+using DiplomaProjects.Core.Abstractions.RepositoryAbstractions;
 using DiplomaProjects.Core.Abstractions.ServicesAbstractions.ApplicationsAbstractions;
 using DiplomaProjects.Core.Abstractions.ServicesAbstractions.UsersAbstractions;
 using DiplomaProjects.Core.Models.ApplicationsModels;
@@ -14,13 +15,16 @@ namespace DiplomaProjects.Controllers.ApplicationsControllers
 		private readonly IApplicationsServices _applicationsService;
 		private readonly IStatusesServices _statusesService;
 		private readonly IUsersService _usersService;
+		private readonly IRolesRepository _rolessRepository;
 		public ApplicationsController(
-			IApplicationsServices applicationsService, 
+			IApplicationsServices applicationsService,
 			IStatusesServices statusesService,
+			IRolesRepository rolesRepository,
 			IUsersService usersService)
 		{
 			_statusesService = statusesService;
 			_applicationsService = applicationsService;
+			_rolessRepository = rolesRepository;
 			_usersService = usersService;
 		}
 		[HttpGet("application/getall")]
@@ -47,6 +51,34 @@ namespace DiplomaProjects.Controllers.ApplicationsControllers
 			}
 		}
 
+		[HttpGet("application/getByUserGuid")]
+		public async Task<IActionResult> GetPersonalApplication(Guid userGuid, string UserRoleName)
+		{
+			try
+			{
+				int userId = await _usersService.GetByGuid(userGuid);
+				int roleId = await _rolessRepository.GetByRoleName(UserRoleName);
+
+				var personalApplications = await _applicationsService.GetPersonalApplication(userId, roleId);
+
+				var baseUrl = $"{Request.Scheme}://{Request.Host}/images/";
+
+				personalApplications.ForEach(application =>
+				{
+					application.ImagePaths = application.ImagePaths
+						.Select(path => baseUrl + Path.GetFileName(path))
+						.ToList();
+				});
+
+				return Ok(personalApplications);
+			}
+			catch (Exception)
+			{
+
+				throw new Exception();
+			}
+		}
+
 		[HttpPost("application/create")]
 		public async Task<IActionResult> CreateApplication([FromForm] ApplicationsRequest applicationsRequest)
 		{
@@ -56,14 +88,12 @@ namespace DiplomaProjects.Controllers.ApplicationsControllers
 			}
 			string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
 
-			// Проверка существования папки и создание, если не существует
 			if (!Directory.Exists(uploadPath))
 			{
 				Directory.CreateDirectory(uploadPath);
 			}
 
 			int userId = await _usersService.GetByGuid(applicationsRequest.UserGuid);
-			//string uploadPath = @"C:\Users\User\source\Session\DiplomaProjects\DiplomaProjects\images";
 
 			var defaultStatusesId = 1;
 			var defaultStatus = await _statusesService.GetdDefaultStatusesAsync(defaultStatusesId);
@@ -116,6 +146,21 @@ namespace DiplomaProjects.Controllers.ApplicationsControllers
 			{
 				return BadRequest("Не получилось создать заявку!");
 			}
+		}
+
+		[HttpPost("application/takejob")]
+		public async Task<IActionResult> TakeJob([FromBody] TakeJobRequest takeJobRequest)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			int userId = await _usersService.GetByGuid(takeJobRequest.EmployeeGuid);
+
+			int applicationId = await _applicationsService.TakeJob(takeJobRequest.ApplicationId, takeJobRequest.StatusesId, takeJobRequest.ClientId, userId);
+
+			return Ok(applicationId);
 		}
 	}
 }

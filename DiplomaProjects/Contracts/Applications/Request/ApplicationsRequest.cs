@@ -6,6 +6,6 @@ namespace DiplomaProjects.Contracts.Applications.Request
 		[Required] string Title,
 		[Required] string Description,
 		List<IFormFile> Files,
-		[Required] string UserGuid
+		[Required] Guid UserGuid
 		);
 }

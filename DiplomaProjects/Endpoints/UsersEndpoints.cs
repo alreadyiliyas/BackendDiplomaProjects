@@ -1,5 +1,4 @@
-﻿using DiplomaProjects.Contracts;
-using DiplomaProjects.Contracts.Users;
+﻿using DiplomaProjects.Contracts.Users;
 using DiplomaProjects.Core.Abstractions.ServicesAbstractions.UsersAbstractions;
 
 namespace DiplomaProjects.Endpoints

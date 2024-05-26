@@ -24,6 +24,11 @@ namespace DiplomaProjects.Application.Services.UsersService
 			return _mapper.Map<List<UserInfo>>(userInfoEntity);
 
 		}
+		public async Task<UserInfo> GetUsersInfoByGuid(int userId)
+		{
+			var userInfoEntity = _usersInfoRepository.GetById(userId);
+			return _mapper.Map<UserInfo>(userInfoEntity);
+		}
 		public async Task<int> AddUserInfo(UserInfo userInfo)
 		{
 			var userInfoEntity = _mapper.Map<UserInfoEntity>(userInfo);

@@ -66,11 +66,11 @@ namespace DiplomaProjects.DataAccess.Repositories
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task<int> GetByGuid(string userGuid)
+		public async Task<int> GetByGuid(Guid userGuid)
 		{
 			var userEntity = await _context.Users
 									.AsNoTracking()
-									.FirstOrDefaultAsync(x => x.GuidUserId.ToString() == userGuid);
+									.FirstOrDefaultAsync(x => x.GuidUserId == userGuid);
 			var user = _mapper.Map<User>(userEntity);
 			return user.Id;
 		}

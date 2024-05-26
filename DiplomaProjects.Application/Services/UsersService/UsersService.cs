@@ -108,7 +108,7 @@ namespace DiplomaProjects.Application.Services.UsersService
             };
         }
 
-		public async Task<int> GetByGuid(string guid)
+		public async Task<int> GetByGuid(Guid guid)
 		{
             int userId = await _usersRepository.GetByGuid(guid);
 

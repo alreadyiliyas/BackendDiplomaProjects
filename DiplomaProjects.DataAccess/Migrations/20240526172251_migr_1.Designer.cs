@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiplomaProjects.DataAccess.Migrations
 {
     [DbContext(typeof(DiplomaDbContext))]
-    [Migration("20240519150615_migr_2")]
-    partial class migr_2
+    [Migration("20240526172251_migr_1")]
+    partial class migr_1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,6 +24,55 @@ namespace DiplomaProjects.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ApplicationsEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("integer");
+
+                    b.Property<List<string>>("ImagePaths")
+                        .IsRequired()
+                        .HasColumnType("text[]");
+
+                    b.Property<DateTime>("LastModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("ModeratorId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StatusesId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("ModeratorId");
+
+                    b.HasIndex("StatusesId");
+
+                    b.ToTable("Applications");
+                });
 
             modelBuilder.Entity("DiplomaProjects.DataAccess.Entities.Address.AddressOfHouseEntity", b =>
                 {
@@ -190,55 +239,6 @@ namespace DiplomaProjects.DataAccess.Migrations
                     b.ToTable("Streets");
                 });
 
-            modelBuilder.Entity("DiplomaProjects.DataAccess.Entities.Application.ApplicationsEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ClientId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("EmployeeId")
-                        .HasColumnType("integer");
-
-                    b.Property<List<string>>("ImagePaths")
-                        .IsRequired()
-                        .HasColumnType("text[]");
-
-                    b.Property<DateTime>("LastModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int?>("ModeratorId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("StatusesId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("ModeratorId");
-
-                    b.HasIndex("StatusesId");
-
-                    b.ToTable("Applications");
-                });
-
             modelBuilder.Entity("DiplomaProjects.DataAccess.Entities.Application.StatusesEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -395,6 +395,37 @@ namespace DiplomaProjects.DataAccess.Migrations
                     b.ToTable("WorkerSpecialtyEntities");
                 });
 
+            modelBuilder.Entity("ApplicationsEntity", b =>
+                {
+                    b.HasOne("DiplomaProjects.DataAccess.Entities.Users.UserEntity", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DiplomaProjects.DataAccess.Entities.Users.UserEntity", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId");
+
+                    b.HasOne("DiplomaProjects.DataAccess.Entities.Users.UserEntity", "Moderator")
+                        .WithMany()
+                        .HasForeignKey("ModeratorId");
+
+                    b.HasOne("DiplomaProjects.DataAccess.Entities.Application.StatusesEntity", "Statuses")
+                        .WithMany()
+                        .HasForeignKey("StatusesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Moderator");
+
+                    b.Navigation("Statuses");
+                });
+
             modelBuilder.Entity("DiplomaProjects.DataAccess.Entities.Address.AddressOfHouseEntity", b =>
                 {
                     b.HasOne("DiplomaProjects.DataAccess.Entities.Address.MicroDistrictsEntity", "MicroDistricts")
@@ -481,37 +512,6 @@ namespace DiplomaProjects.DataAccess.Migrations
                     b.Navigation("Districts");
 
                     b.Navigation("Streets");
-                });
-
-            modelBuilder.Entity("DiplomaProjects.DataAccess.Entities.Application.ApplicationsEntity", b =>
-                {
-                    b.HasOne("DiplomaProjects.DataAccess.Entities.Users.UserEntity", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DiplomaProjects.DataAccess.Entities.Users.UserEntity", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId");
-
-                    b.HasOne("DiplomaProjects.DataAccess.Entities.Users.UserEntity", "Moderator")
-                        .WithMany()
-                        .HasForeignKey("ModeratorId");
-
-                    b.HasOne("DiplomaProjects.DataAccess.Entities.Application.StatusesEntity", "Statuses")
-                        .WithMany()
-                        .HasForeignKey("StatusesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Moderator");
-
-                    b.Navigation("Statuses");
                 });
 
             modelBuilder.Entity("DiplomaProjects.DataAccess.Entities.Users.UserEntity", b =>

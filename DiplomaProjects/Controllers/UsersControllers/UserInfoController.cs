@@ -11,14 +11,23 @@ namespace DiplomaProjects.Controllers.UsersControllers
 	public class UserInfoController : ControllerBase
 	{
 		private readonly IUsersInfoServices _usersInfoServices;
-		public UserInfoController(IUsersInfoServices usersInfoServices)
+		private readonly IUsersService _usersServices;
+		public UserInfoController(IUsersInfoServices usersInfoServices, IUsersService usersService)
 		{
 			_usersInfoServices = usersInfoServices;
+			_usersServices = usersService;
 		}
 		[HttpGet("userinfo")]
 		public async Task<IActionResult> GetAllUsersInfo()
 		{
 			var usersInfo = await _usersInfoServices.GetAllUsersInfo();
+			return Ok(usersInfo);
+		}
+		[HttpGet("userinfo/{userGuid}")]
+		public async Task<IActionResult> GetUsersInfoByGuid(Guid userGuid)
+		{
+			int userId = await _usersServices.GetByGuid(userGuid);
+			var usersInfo = await _usersInfoServices.GetUsersInfoByGuid(userId);
 			return Ok(usersInfo);
 		}
 		[HttpPost("userinfo")]
