@@ -12,18 +12,33 @@ namespace DiplomaProjects.Controllers.ApplicationsControllers
 	public class ApplicationsController : ControllerBase
 	{
 		private readonly IApplicationsServices _applicationsService;
+		private readonly IStatusesServices _statusesService;
 		private readonly IUsersService _usersService;
-		public ApplicationsController(IApplicationsServices applicationsService, IUsersService usersService)
+		public ApplicationsController(
+			IApplicationsServices applicationsService, 
+			IStatusesServices statusesService,
+			IUsersService usersService)
 		{
+			_statusesService = statusesService;
 			_applicationsService = applicationsService;
 			_usersService = usersService;
 		}
 		[HttpGet("application/getall")]
-		public async Task<IActionResult> GetAllApplication() 
+		public async Task<IActionResult> GetAllApplication()
 		{
 			try
 			{
 				var applications = await _applicationsService.GetAllApplications();
+
+				var baseUrl = $"{Request.Scheme}://{Request.Host}/images/";
+
+				applications.ForEach(application =>
+				{
+					application.ImagePaths = application.ImagePaths
+						.Select(path => baseUrl + Path.GetFileName(path))
+						.ToList();
+				});
+
 				return Ok(applications);
 			}
 			catch (Exception ex)
@@ -31,7 +46,7 @@ namespace DiplomaProjects.Controllers.ApplicationsControllers
 				return StatusCode(500, "Ошибка сервера: " + ex.Message);
 			}
 		}
-		
+
 		[HttpPost("application/create")]
 		public async Task<IActionResult> CreateApplication([FromForm] ApplicationsRequest applicationsRequest)
 		{
@@ -39,11 +54,19 @@ namespace DiplomaProjects.Controllers.ApplicationsControllers
 			{
 				return BadRequest(ModelState);
 			}
+			string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+
+			// Проверка существования папки и создание, если не существует
+			if (!Directory.Exists(uploadPath))
+			{
+				Directory.CreateDirectory(uploadPath);
+			}
 
 			int userId = await _usersService.GetByGuid(applicationsRequest.UserGuid);
-			string uploadPath = @"C:\Users\User\source\Session\DiplomaProjects\DiplomaProjects\images";
+			//string uploadPath = @"C:\Users\User\source\Session\DiplomaProjects\DiplomaProjects\images";
 
-			int defaultStatus = 1; // Статус создан, создается автоматически при создании заявки
+			var defaultStatusesId = 1;
+			var defaultStatus = await _statusesService.GetdDefaultStatusesAsync(defaultStatusesId);
 
 			// Create a list to store the image paths
 			var imagePaths = new List<string>();
@@ -72,8 +95,8 @@ namespace DiplomaProjects.Controllers.ApplicationsControllers
 				applicationsRequest.Description,
 				defaultStatus,
 				userId,
-				null,
-				null,
+				null, // ModeratorId изначально пустой
+				null, // EmployeeId изначально пустой
 				DateTime.Now,
 				DateTime.Now,
 				imagePaths);

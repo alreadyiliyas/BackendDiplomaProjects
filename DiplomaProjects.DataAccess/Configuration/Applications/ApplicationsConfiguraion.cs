@@ -31,6 +31,27 @@ namespace DiplomaProjects.DataAccess.Configuration.Applications
 						v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
 						v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null))
 					.HasColumnType("json");
+
+			// Configure relationships
+			builder.HasOne(a => a.Statuses)
+				.WithMany()
+				.HasForeignKey(a => a.StatusesId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			builder.HasOne(a => a.Client)
+				.WithMany()
+				.HasForeignKey(a => a.ClientId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			builder.HasOne(a => a.Moderator)
+				.WithMany()
+				.HasForeignKey(a => a.ModeratorId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			builder.HasOne(a => a.Employee)
+				.WithMany()
+				.HasForeignKey(a => a.EmployeeId)
+				.OnDelete(DeleteBehavior.Restrict);
 		}
 	}
 }

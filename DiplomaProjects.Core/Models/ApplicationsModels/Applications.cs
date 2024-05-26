@@ -13,16 +13,16 @@ public class Applications
 	public DateTime LastModifiedAt { get; set; }
 	public Statuses Statuses { get; set; }
 	public User Client { get; set; }
-	public User Moderator { get; set; }
-	public User Employee { get; set; }
+	public User? Moderator { get; set; }
+	public User? Employee { get; set; }
 	public List<string> ImagePaths { get; set; } = new List<string>();
 
-	public Applications(int id, string? title, string? description, int statusesId, int clientId, int? moderatorId, int? employeeId, DateTime createdAt, DateTime lastModifiedAt, List<string> imagePaths)
+	public Applications(int id, string? title, string? description, Statuses statuses, int clientId, int? moderatorId, int? employeeId, DateTime createdAt, DateTime lastModifiedAt, List<string> imagePaths)
 	{
 		Id = id;
 		Title = title;
 		Description = description;
-		StatusesId = statusesId;
+		Statuses = statuses;
 		ClientId = clientId;
 		ModeratorId = moderatorId;
 		EmployeeId = employeeId;
@@ -31,7 +31,7 @@ public class Applications
 		ImagePaths = imagePaths;
 	}
 
-	public static (Applications applications, string error) Create(int id, string? title, string? description, int statusesId, int clientId, int? moderatorId, int? employeeId, DateTime createdAt, DateTime lastModifiedAt, List<string> imagePaths)
+	public static (Applications applications, string error) Create(int id, string? title, string? description, Statuses statuses, int clientId, int? moderatorId, int? employeeId, DateTime createdAt, DateTime lastModifiedAt, List<string> imagePaths)
 	{
 		var error = string.Empty;
 		if (string.IsNullOrWhiteSpace(title))
@@ -42,7 +42,7 @@ public class Applications
 		{
 			error = "Описание не может быть пустым";
 		}
-		var applications = new Applications(id, title, description, statusesId, clientId, moderatorId, employeeId, createdAt, lastModifiedAt, imagePaths);
+		var applications = new Applications(id, title, description, statuses, clientId, moderatorId, employeeId, createdAt, lastModifiedAt, imagePaths);
 		return (applications, error);
 	}
 }

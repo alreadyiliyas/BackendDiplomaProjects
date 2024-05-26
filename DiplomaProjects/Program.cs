@@ -20,6 +20,7 @@ using DiplomaProjects.DataAccess.Entities.Users;
 using DiplomaProjects.DataAccess.Entities.Application;
 using DiplomaProjects.Core.Abstractions.ServicesAbstractions.ApplicationsAbstractions;
 using DiplomaProjects.Application.Services.ApplicationsService;
+using DiplomaProjects.DataAccess.Repositories.ApplicationRepositories;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -68,8 +69,11 @@ builder.Services.AddScoped<IRolesRepository, RolesRepository>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 
 
-builder.Services.AddScoped<IRepositories<ApplicationsEntity>, Repositories<ApplicationsEntity>>();
+
+builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
 builder.Services.AddScoped<IApplicationsServices, ApplicationsServices>();
+builder.Services.AddScoped<IStatusesServices, StatusesService>();
+builder.Services.AddScoped<IRepositories<StatusesEntity>, Repositories<StatusesEntity>>();
 
 
 builder.Services.AddScoped<IAddressServices, AddressService>();
@@ -117,8 +121,13 @@ app.UseCors(x =>
 });
 
 app.MapUsersEndpoints();
+
+app.UseStaticFiles();
+
 app.UseRouting();
+
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();

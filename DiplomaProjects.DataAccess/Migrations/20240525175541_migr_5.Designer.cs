@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using DiplomaProjects.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiplomaProjects.DataAccess.Migrations
 {
     [DbContext(typeof(DiplomaDbContext))]
-    partial class DiplomaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240525175541_migr_5")]
+    partial class migr_5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
