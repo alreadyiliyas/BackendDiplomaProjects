@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiplomaProjects.DataAccess.Migrations
 {
     [DbContext(typeof(DiplomaDbContext))]
-    [Migration("20240526172251_migr_1")]
+    [Migration("20240529173314_migr_1")]
     partial class migr_1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,9 @@ namespace DiplomaProjects.DataAccess.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CitiesId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("ClientId")
                         .HasColumnType("integer");
@@ -62,6 +65,8 @@ namespace DiplomaProjects.DataAccess.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CitiesId");
 
                     b.HasIndex("ClientId");
 
@@ -397,6 +402,10 @@ namespace DiplomaProjects.DataAccess.Migrations
 
             modelBuilder.Entity("ApplicationsEntity", b =>
                 {
+                    b.HasOne("DiplomaProjects.DataAccess.Entities.Address.CitiesEntity", "Cities")
+                        .WithMany()
+                        .HasForeignKey("CitiesId");
+
                     b.HasOne("DiplomaProjects.DataAccess.Entities.Users.UserEntity", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId")
@@ -416,6 +425,8 @@ namespace DiplomaProjects.DataAccess.Migrations
                         .HasForeignKey("StatusesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Cities");
 
                     b.Navigation("Client");
 

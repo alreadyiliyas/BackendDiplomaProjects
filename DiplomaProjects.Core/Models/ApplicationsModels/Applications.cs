@@ -1,5 +1,6 @@
 ﻿using DiplomaProjects.Core.Models.ApplicationsModels;
 using DiplomaProjects.Core.Models;
+
 public class Applications
 {
 	public int Id { get; set; }
@@ -7,6 +8,7 @@ public class Applications
 	public string? Description { get; set; }
 	public int StatusesId { get; set; }
 	public int ClientId { get; set; }
+	public int? CitiesId { get; set; }  // Внешний ключ для города
 	public int? ModeratorId { get; set; }
 	public int? EmployeeId { get; set; }
 	public DateTime CreatedAt { get; set; }
@@ -17,13 +19,14 @@ public class Applications
 	public User? Employee { get; set; }
 	public List<string> ImagePaths { get; set; } = new List<string>();
 
-	public Applications(int id, string? title, string? description, Statuses statuses, int clientId, int? moderatorId, int? employeeId, DateTime createdAt, DateTime lastModifiedAt, List<string> imagePaths)
+	public Applications(int id, string? title, string? description, Statuses statuses, int clientId, int? citiesId, int? moderatorId, int? employeeId, DateTime createdAt, DateTime lastModifiedAt, List<string> imagePaths)
 	{
 		Id = id;
 		Title = title;
 		Description = description;
 		Statuses = statuses;
 		ClientId = clientId;
+		CitiesId = citiesId;  // Новый параметр
 		ModeratorId = moderatorId;
 		EmployeeId = employeeId;
 		CreatedAt = createdAt.ToUniversalTime();
@@ -31,7 +34,7 @@ public class Applications
 		ImagePaths = imagePaths;
 	}
 
-	public static (Applications applications, string error) Create(int id, string? title, string? description, Statuses statuses, int clientId, int? moderatorId, int? employeeId, DateTime createdAt, DateTime lastModifiedAt, List<string> imagePaths)
+	public static (Applications applications, string error) Create(int id, string? title, string? description, Statuses statuses, int clientId, int? citiesId, int? moderatorId, int? employeeId, DateTime createdAt, DateTime lastModifiedAt, List<string> imagePaths)
 	{
 		var error = string.Empty;
 		if (string.IsNullOrWhiteSpace(title))
@@ -42,7 +45,12 @@ public class Applications
 		{
 			error = "Описание не может быть пустым";
 		}
-		var applications = new Applications(id, title, description, statuses, clientId, moderatorId, employeeId, createdAt, lastModifiedAt, imagePaths);
+		// Проверьте также и наличие города, если это критично
+		else if (citiesId == null)
+		{
+			error = "Не указан город";
+		}
+		var applications = new Applications(id, title, description, statuses, clientId, citiesId, moderatorId, employeeId, createdAt, lastModifiedAt, imagePaths);
 		return (applications, error);
 	}
 }

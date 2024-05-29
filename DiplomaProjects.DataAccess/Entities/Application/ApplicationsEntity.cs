@@ -1,4 +1,5 @@
-﻿using DiplomaProjects.DataAccess.Entities.Application;
+﻿using DiplomaProjects.DataAccess.Entities.Address;
+using DiplomaProjects.DataAccess.Entities.Application;
 using DiplomaProjects.DataAccess.Entities.Users;
 
 public class ApplicationsEntity
@@ -17,4 +18,6 @@ public class ApplicationsEntity
 	public DateTime CreatedAt { get; set; }
 	public DateTime LastModifiedAt { get; set; }
 	public List<string> ImagePaths { get; set; } = new List<string>();
+	public int? CitiesId { get; set; } // Необязательное поле, если приложение может существовать без города
+	public CitiesEntity? Cities { get; set; }
 }

@@ -52,6 +52,11 @@ namespace DiplomaProjects.DataAccess.Configuration.Applications
 				.WithMany()
 				.HasForeignKey(a => a.EmployeeId)
 				.OnDelete(DeleteBehavior.Restrict);
+
+			builder.HasOne(a => a.Cities)
+				.WithMany()
+				.HasForeignKey(a => a.CitiesId)
+				.OnDelete(DeleteBehavior.Restrict);
 		}
 	}
 }

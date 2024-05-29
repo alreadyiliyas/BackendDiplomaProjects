@@ -2,10 +2,11 @@
 
 namespace DiplomaProjects.Contracts.Applications.Request
 {
-	public record TakeJobRequest(
+	public record UpdateStateApplicationbRequest(
 		[Required] int ApplicationId,
 		[Required] int StatusesId,
 		[Required] int ClientId,
-		[Required] Guid EmployeeGuid
+		[Required] Guid HandlerPersonGuid,
+		[Required] string HandlerPersonRoleName
 		);
 }

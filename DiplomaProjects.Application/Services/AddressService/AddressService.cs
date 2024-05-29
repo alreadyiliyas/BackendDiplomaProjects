@@ -2,6 +2,7 @@
 using DiplomaProjects.Core.Abstractions.RepositoryAbstractions;
 using DiplomaProjects.Core.Models.AddressModels;
 using DiplomaProjects.DataAccess.Entities.Address;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace DiplomaProjects.Application.Services.AddressService
@@ -71,6 +72,13 @@ namespace DiplomaProjects.Application.Services.AddressService
 			var citiesEntity = await _cityRepository.GetQueryDataAsync(whereExp, selectExp);
 			return _mapper.Map<List<Cities>>(citiesEntity);
 		}
+		public async Task<List<Cities>> GetAllCititesByName(string name)
+		{
+			//Expression<Func<CitiesEntity, bool>> whereExp = c => c.CitiesName == name;
+			//Expression<Func<CitiesEntity, Cities>> selectExp = r => new Cities(r.Id, r.CitiesName);
+			return null;
+		}
+		
 		public async Task<List<Districts>> GetAllDistrictsByIdCity(int cityId)
 		{
 			Expression<Func<DistrictsEntity, bool>> whereExp = r => r.CitiesId == cityId;

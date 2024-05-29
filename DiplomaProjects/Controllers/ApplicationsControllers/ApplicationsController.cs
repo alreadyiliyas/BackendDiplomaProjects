@@ -1,4 +1,5 @@
-﻿using DiplomaProjects.Application.Services.ApplicationsService;
+﻿using DiplomaProjects.Application.Services.AddressService;
+using DiplomaProjects.Application.Services.ApplicationsService;
 using DiplomaProjects.Contracts.Applications.Request;
 using DiplomaProjects.Core.Abstractions.RepositoryAbstractions;
 using DiplomaProjects.Core.Abstractions.ServicesAbstractions.ApplicationsAbstractions;
@@ -16,6 +17,7 @@ namespace DiplomaProjects.Controllers.ApplicationsControllers
 		private readonly IStatusesServices _statusesService;
 		private readonly IUsersService _usersService;
 		private readonly IRolesRepository _rolessRepository;
+		private readonly IAddressServices _addressServices;
 		public ApplicationsController(
 			IApplicationsServices applicationsService,
 			IStatusesServices statusesService,
@@ -48,6 +50,32 @@ namespace DiplomaProjects.Controllers.ApplicationsControllers
 			catch (Exception ex)
 			{
 				return StatusCode(500, "Ошибка сервера: " + ex.Message);
+			}
+		}
+		[HttpGet("application/getAllByCity")]
+		public async Task<IActionResult> GetAllApplicationByCity(int CityId, string UserRoleName)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+			try
+			{
+				var applications = await _applicationsService.GetAllApplicationByCity(CityId, UserRoleName);
+				
+				var baseUrl = $"{Request.Scheme}://{Request.Host}/images/";
+
+				applications.ForEach(application =>
+				{
+					application.ImagePaths = application.ImagePaths
+						.Select(path => baseUrl + Path.GetFileName(path))
+						.ToList();
+				});
+				return Ok(applications);
+			}
+			catch (Exception)
+			{
+				throw new Exception("Ошибка при получении заявков по городу");
 			}
 		}
 
@@ -86,79 +114,65 @@ namespace DiplomaProjects.Controllers.ApplicationsControllers
 			{
 				return BadRequest(ModelState);
 			}
-			string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
-
-			if (!Directory.Exists(uploadPath))
+			try
 			{
-				Directory.CreateDirectory(uploadPath);
-			}
+				string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
 
-			int userId = await _usersService.GetByGuid(applicationsRequest.UserGuid);
-
-			var defaultStatusesId = 1;
-			var defaultStatus = await _statusesService.GetdDefaultStatusesAsync(defaultStatusesId);
-
-			// Create a list to store the image paths
-			var imagePaths = new List<string>();
-
-			// Save files to the server
-			if (applicationsRequest.Files != null && applicationsRequest.Files.Count > 0)
-			{
-				foreach (var file in applicationsRequest.Files)
+				if (!Directory.Exists(uploadPath))
 				{
-					if (file.Length > 0)
+					Directory.CreateDirectory(uploadPath);
+				}
+
+				var imagePaths = new List<string>();
+
+				// Save files to the server
+				if (applicationsRequest.Files != null && applicationsRequest.Files.Count > 0)
+				{
+					foreach (var file in applicationsRequest.Files)
 					{
-						Console.WriteLine($"Загружается файл: {file.FileName}");
-						var filePath = Path.Combine(uploadPath, Path.GetRandomFileName() + Path.GetExtension(file.FileName));
-						using (var stream = new FileStream(filePath, FileMode.Create))
+						if (file.Length > 0)
 						{
-							await file.CopyToAsync(stream);
+							Console.WriteLine($"Загружается файл: {file.FileName}");
+							var filePath = Path.Combine(uploadPath, Path.GetRandomFileName() + Path.GetExtension(file.FileName));
+							using (var stream = new FileStream(filePath, FileMode.Create))
+							{
+								await file.CopyToAsync(stream);
+							}
+							imagePaths.Add(filePath);
 						}
-						imagePaths.Add(filePath);
 					}
 				}
+
+				int applicationId = await _applicationsService.CreateApplication(
+																	applicationsRequest.Title,
+																	applicationsRequest.Description,
+																	imagePaths,
+																	applicationsRequest.UserGuid);
+
+				return Ok(applicationId);
+
 			}
-
-			var (applications, error) = Applications.Create(
-				0,
-				applicationsRequest.Title,
-				applicationsRequest.Description,
-				defaultStatus,
-				userId,
-				null, // ModeratorId изначально пустой
-				null, // EmployeeId изначально пустой
-				DateTime.Now,
-				DateTime.Now,
-				imagePaths);
-
-			if (!string.IsNullOrEmpty(error))
+			catch (Exception)
 			{
-				return BadRequest(error);
-			}
-
-			var res = await _applicationsService.CreateApplication(applications);
-
-			if (res != -1)
-			{
-				return Ok(res);
-			}
-			else
-			{
-				return BadRequest("Не получилось создать заявку!");
+				return BadRequest("При создании заявки произошла ошибка!");
 			}
 		}
 
-		[HttpPost("application/takejob")]
-		public async Task<IActionResult> TakeJob([FromBody] TakeJobRequest takeJobRequest)
+		[HttpPost("application/updatestate")]
+		public async Task<IActionResult> UpdateStateApplication([FromBody] UpdateStateApplicationbRequest updateStateApplicationbRequest)
 		{
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
 			}
 
-			int userId = await _usersService.GetByGuid(takeJobRequest.EmployeeGuid);
+			int userId = await _usersService.GetByGuid(updateStateApplicationbRequest.HandlerPersonGuid);
 
-			int applicationId = await _applicationsService.TakeJob(takeJobRequest.ApplicationId, takeJobRequest.StatusesId, takeJobRequest.ClientId, userId);
+			int applicationId = await _applicationsService.UpdateState(updateStateApplicationbRequest.ApplicationId, 
+																	   updateStateApplicationbRequest.StatusesId,
+																	   updateStateApplicationbRequest.ClientId, 
+																	   userId,
+																	   updateStateApplicationbRequest.HandlerPersonRoleName);
 
 			return Ok(applicationId);
 		}

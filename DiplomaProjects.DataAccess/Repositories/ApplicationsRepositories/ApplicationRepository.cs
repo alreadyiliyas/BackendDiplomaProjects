@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using DiplomaProjects.Core.Abstractions.RepositoryAbstractions;
-using DiplomaProjects.Core.Models;
-using DiplomaProjects.Core.Models.ApplicationsModels;
+using DiplomaProjects.Core.Models.AddressModels;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+
 
 namespace DiplomaProjects.DataAccess.Repositories.ApplicationRepositories
 {
@@ -28,11 +27,12 @@ namespace DiplomaProjects.DataAccess.Repositories.ApplicationRepositories
 					Description = applications.Description,
 					StatusesId = applications.Statuses.Id,
 					ClientId = applications.ClientId,
-					ModeratorId = applications.ModeratorId, // Может быть null
-					EmployeeId = applications.EmployeeId, // Может быть null
+					ModeratorId = applications.ModeratorId,
+					EmployeeId = applications.EmployeeId,
 					CreatedAt = applications.CreatedAt,
 					LastModifiedAt = applications.LastModifiedAt,
-					ImagePaths = applications.ImagePaths
+					ImagePaths = applications.ImagePaths,
+					CitiesId = applications.CitiesId
 				};
 
 				await _context.Applications.AddAsync(applicationEntity);
@@ -46,7 +46,23 @@ namespace DiplomaProjects.DataAccess.Repositories.ApplicationRepositories
 			}
 			
 		}
+		public async Task<int> GetCitiesIdByUserId(int userId)
+		{
+			// Получаем адрес пользователя
+			var address = await _context.AddressOfHouses.FirstOrDefaultAsync(a => a.UserId == userId);
+			if (address == null) return -1;
 
+			// Получаем улицу
+			var microDistrictsId = await _context.MicroDistricts.FirstOrDefaultAsync(s => s.Id == address.MicroDistrictsId);
+			if (microDistrictsId == null) return -1;
+
+			// Получаем район
+			var district = await _context.Districts.FirstOrDefaultAsync(d => d.Id == microDistrictsId.DistrictsId);
+			if (district == null) return -1;
+
+			// Возвращаем ID города
+			return district.CitiesId;
+		}
 		public async Task<List<Applications>> GetAllApplications()
 		{
 			var applicationEntity = await _context.Applications
@@ -94,7 +110,11 @@ namespace DiplomaProjects.DataAccess.Repositories.ApplicationRepositories
 		}
 
 
-		public async Task<int> UpdateApplication(int ApplicationId, int StatusesId, int ClientId, int EmployeeId)
+		public async Task<int> UpdateApplicationEmployee(
+			int ApplicationId, 
+			int StatusesId, 
+			int ClientId, 
+			int HandlerPersonId)
 		{
 			try
 			{
@@ -108,7 +128,7 @@ namespace DiplomaProjects.DataAccess.Repositories.ApplicationRepositories
 				}
 
 				applicationEntity.StatusesId = StatusesId;
-				applicationEntity.EmployeeId = EmployeeId;
+				applicationEntity.EmployeeId = HandlerPersonId;
 				applicationEntity.LastModifiedAt = DateTime.UtcNow;
 
 				_context.Applications.Update(applicationEntity);
@@ -119,6 +139,70 @@ namespace DiplomaProjects.DataAccess.Repositories.ApplicationRepositories
 			{
 				throw new Exception("An error occurred while updating the application.");
 			}
+		}
+		public async Task<int> UpdateApplicationModerator(
+			int ApplicationId,
+			int StatusesId,
+			int ClientId,
+			int HandlerPersonId)
+		{
+			try
+			{
+				var applicationEntity = await _context.Applications
+								.AsNoTracking()
+								.FirstOrDefaultAsync(x => x.Id == ApplicationId);
+
+				if (applicationEntity == null)
+				{
+					return -1;
+				}
+
+				applicationEntity.StatusesId = StatusesId;
+				applicationEntity.ModeratorId = HandlerPersonId;
+				applicationEntity.LastModifiedAt = DateTime.UtcNow;
+
+				_context.Applications.Update(applicationEntity);
+				await _context.SaveChangesAsync();
+				return applicationEntity.Id;
+			}
+			catch (Exception)
+			{
+				throw new Exception("An error occurred while updating the application.");
+			}
+		}
+
+		public async Task<List<Applications>> GetAllApplicationByCity(int CityId, int RoleId)
+		{
+			List<ApplicationsEntity> applicationEntities;
+			if (RoleId == 2)
+			{
+				applicationEntities = await _context.Applications
+									.Include("Statuses")
+									.Include("Client")
+									.Include("Moderator")
+									.Include("Employee")
+									.AsNoTracking()
+									.Where(a => a.CitiesId == CityId)
+									.ToListAsync();
+			}
+			else if (RoleId == 3)
+			{
+				applicationEntities = await _context.Applications
+									.Include("Statuses")
+									.Include("Client")
+									.Include("Moderator")
+									.Include("Employee")
+									.AsNoTracking()
+									.Where(a => a.StatusesId == 2 && a.CitiesId == CityId)
+									.ToListAsync();
+			}
+			else
+			{
+				applicationEntities = new List<ApplicationsEntity>();  // Обеспечьте безопасный возврат для случаев несоответствия RoleId
+			}
+
+			var applications = _mapper.Map<List<Applications>>(applicationEntities);
+			return applications;
 		}
 	}
 }
